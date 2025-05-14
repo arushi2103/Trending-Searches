@@ -5,11 +5,9 @@ import com.arushi.typeahead.trendingrankingservice.model.SearchTerm;
 import com.arushi.typeahead.trendingrankingservice.repository.SearchTermRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.beans.PropertyEditorSupport;
 import java.time.Duration;
 import java.util.List;
 

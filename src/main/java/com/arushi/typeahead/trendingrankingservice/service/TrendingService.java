@@ -3,7 +3,6 @@ package com.arushi.typeahead.trendingrankingservice.service;
 import com.arushi.typeahead.trendingrankingservice.model.SearchTerm;
 import com.arushi.typeahead.trendingrankingservice.repository.SearchTermRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.RedisTemplate;
