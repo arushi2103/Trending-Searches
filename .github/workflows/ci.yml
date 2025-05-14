@@ -1,13 +1,13 @@
 name: Java CI
+
 on:
   push:
-    branches:["main"]
+    branches: ["main"]
   pull_request:
-    branches:["main"]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -33,11 +33,10 @@ jobs:
       - name: Run tests
         run: mvn test
 
-#      Optional: Jacoco coverage repost artifact
+      # Optional: Jacoco coverage report artifact
       - name: Archive code coverage report
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
           path: target/site/jacoco/index.html
-
