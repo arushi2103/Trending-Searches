@@ -66,6 +66,10 @@ public class TrendingService {
             }else{
                 log.info("✅ Cached trending terms for prefix: {}: {}", prefix, trendingTerms);
             }
+            if(trendingTerms ==null){
+                //return empty list
+                return List.of();
+            }
             return trendingTerms;
         }
         }catch(RedisConnectionFailureException e){
