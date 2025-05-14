@@ -99,8 +99,8 @@ public class TrendingServiceTest {
         assertEquals(List.of(),result);
 
         //verify mockListOps
-        verify(mockListOps).rightPushAll("trending:"+prefix, List.of().toArray(new String[0]));
-        verify(mockRedisTemplate).expire("trending:"+prefix, Duration.ofHours(1));
+        verify(mockListOps,never()).rightPushAll("trending:"+prefix, List.of().toArray(new String[0]));
+        verify(mockRedisTemplate,never()).expire("trending:"+prefix, Duration.ofHours(1));
     }
     @Test
     public void testRedisExpireCalledWhenCachingResults() {
@@ -123,43 +123,46 @@ public class TrendingServiceTest {
         verify(mockRedisTemplate).expire(eq("trending:" + prefix), eq(Duration.ofHours(1)));
     }
 
-//    @Test
-//    public void testGetTrendingTerms_RedisThrowsException_FallbackToDB() {
-//        String prefix = "fa";
-//        List<String> expected = List.of("fast", "fame");
-//
-//        // Simulate Redis throwing exception
-//        when(mockRedisTemplate.hasKey("trending:" + prefix))
-//                .thenThrow(new RuntimeException("Redis unavailable"));
-//
-//        when(mockRepository.findTop10ByTermStartingWithOrderByFrequencyDesc(prefix))
-//                .thenReturn(List.of(
-//                        new SearchTerm("fast", 10, null),
-//                        new SearchTerm("fame", 8, null)
-//                ));
-//
-//
-//        List<String> result = trendingService.getTrendingTerms(prefix);
-//
-//        assertEquals(expected, result);
-//        verify(mockRepository, times(1)).findTop10ByTermStartingWithOrderByFrequencyDesc(prefix);
-//    }
-//
-//    @Test
-//    public void testGetTrendingTerms_DBThrowsException() {
-//        String prefix = "cr";
-//
-//        when(mockRedisTemplate.hasKey("trending:" + prefix)).thenReturn(false);
-//
-//        when(mockRepository.findTop10ByTermStartingWithOrderByFrequencyDesc(prefix))
-//                .thenThrow(new RuntimeException("Database failure"));
-//
-//        try {
-//            trendingService.getTrendingTerms(prefix);
-//        } catch (RuntimeException e) {
-//            assertEquals("Database failure", e.getMessage());
-//        }
-//    }
+    @Test
+    public void testGetTrendingTerms_RedisThrowsException_FallbackToDB() {
+        String prefix = "fa";
+        List<String> expected = List.of("fast", "fame");
+
+        // Simulate Redis throwing exception
+        when(mockRedisTemplate.hasKey("trending:" + prefix))
+                .thenThrow(new RuntimeException("Redis unavailable"));
+
+        when(mockRepository.findTop10ByTermStartingWithOrderByFrequencyDesc(prefix))
+                .thenReturn(List.of(
+                        new SearchTerm("fast", 10, null),
+                        new SearchTerm("fame", 8, null)
+                ));
+
+
+        List<String> result = trendingService.getTrendingTerms(prefix);
+
+        assertEquals(expected, result);
+        verify(mockRepository, times(1)).findTop10ByTermStartingWithOrderByFrequencyDesc(prefix);
+    }
+
+    @Test
+    public void testGetTrendingTerms_DBThrowsException() {
+        String prefix = "cr";
+        when(mockRedisTemplate.hasKey("trending:" + prefix)).thenReturn(false);
+
+        when(mockRepository.findTop10ByTermStartingWithOrderByFrequencyDesc(prefix))
+                .thenThrow(new RuntimeException("Database failure"));
+
+        try {
+            trendingService.getTrendingTerms(prefix);
+        } catch (RuntimeException e) {
+            assertEquals("Database failure", e.getMessage());
+        }
+        //verify redis was checked
+        verify(mockRedisTemplate, times(1)).hasKey("trending:" + prefix);
+        // Verify that the repository was called
+        verify(mockRepository,times(2)).findTop10ByTermStartingWithOrderByFrequencyDesc(prefix);
+    }
 
 
 }

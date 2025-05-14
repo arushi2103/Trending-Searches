@@ -46,7 +46,7 @@ public class TrendingService {
         String cacheKey = "trending:" + prefix.toLowerCase();
 //          Check redis
         try{
-        if(cacheKey != null && redisTemplate.hasKey(cacheKey)) {
+        if(redisTemplate.hasKey(cacheKey)) {
             log.info("✅ Cache hit for prefix: {}", prefix);
             return redisTemplate.opsForList().range(cacheKey, 0, 9);
         }else {
@@ -56,28 +56,31 @@ public class TrendingService {
                     .map(SearchTerm::getTerm)
                     .toList();
             log.info(trendingTerms.toString());
-            // Cache the results in Redis
-            redisTemplate.opsForList().rightPushAll(cacheKey, trendingTerms.toArray(new String[0]));
-            redisTemplate.expire(cacheKey, Duration.ofHours(1));
 
             if(trendingTerms.isEmpty()){
                 log.info("⚠️ No trending terms found for prefix: {}",prefix);
             }else{
                 log.info("✅ Cached trending terms for prefix: {}: {}", prefix, trendingTerms);
-            }
-            if(trendingTerms ==null){
-                //return empty list
-                return List.of();
+                // Cache the results in Redis
+                redisTemplate.opsForList().rightPushAll(cacheKey, trendingTerms.toArray(new String[0]));
+                redisTemplate.expire(cacheKey, Duration.ofHours(1));
+
             }
             return trendingTerms;
         }
         }catch(RedisConnectionFailureException e){
-            log.error("Redis connection error while fetching trending terms:{}",e.getMessage(),e);
-            throw new RuntimeException("Failed to fetch trending terms from Redis");
-        }catch(DataAccessException e){
-            log.error("Database error while fetching trending termsfor prefix '{}':{}",prefix,e.getMessage(),e);
-            throw new RuntimeException("Failed to fetch trending terms from the database");
-        }catch (Exception e) {
+            log.warn("⚠️ Redis unavailable. Falling back to DB for prefix: {}", prefix);
+            return repository.findTop10ByTermStartingWithOrderByFrequencyDesc(prefix)
+                    .stream()
+                    .map(SearchTerm::getTerm)
+                    .toList();
+        } catch (RuntimeException e) {
+            log.warn("⚠️ Redis runtime error. Falling back to DB for prefix: {}", prefix, e);
+            return repository.findTop10ByTermStartingWithOrderByFrequencyDesc(prefix)
+                    .stream()
+                    .map(SearchTerm::getTerm)
+                    .toList();
+        } catch (Exception e) {
             log.error("Unexpected error:{}",e.getMessage(),e);
             throw new RuntimeException("An unexpected error occurred.");
         }
