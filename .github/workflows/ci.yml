@@ -1,12 +1,13 @@
 name: Java CI
 
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+on: workflow_dispatch
+  # push:
+  #   branches: ["main"]
+  # pull_request:
+  #   branches: ["main"]
 
 jobs:
+# define your jobs here 
   build:
     runs-on: ubuntu-latest
 
