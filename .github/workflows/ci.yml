@@ -1,14 +1,25 @@
 name: Java CI
 
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+on: workflow_dispatch
+  # push:
+  #   branches: ["main"]
+  # pull_request:
+#   branches: ["main"]
 
 jobs:
+  # define your jobs here
   build:
     runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:5.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1})'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout code

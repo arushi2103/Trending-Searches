@@ -6,9 +6,11 @@ import com.arushi.typeahead.trendingrankingservice.repository.SearchTermReposito
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -19,8 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TrendingRankingServiceApplication.class)          //for loading the application context
 @AutoConfigureMockMvc                   //for testing the controller
+
 public class TrendingControllerIntegrationTest {
 
     @Autowired
@@ -35,7 +39,8 @@ public class TrendingControllerIntegrationTest {
                 Arrays.asList(
                         new SearchTerm("explain", 10, null),
                         new SearchTerm("expect", 8, null),
-                        new SearchTerm("expire", 5, null)
+                        new SearchTerm("expire", 5, null),
+                        new SearchTerm("expert", 4, null)
                 )
         );
 
