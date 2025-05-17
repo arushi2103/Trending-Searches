@@ -35,7 +35,8 @@ public class TrendingControllerIntegrationTest {
                 Arrays.asList(
                         new SearchTerm("explain", 10, null),
                         new SearchTerm("expect", 8, null),
-                        new SearchTerm("expire", 5, null)
+                        new SearchTerm("expire", 5, null),
+                        new SearchTerm("expert", 4,null)
                 )
         );
 
