@@ -40,7 +40,11 @@ public class TrendingControllerIntegrationTest {
                         new SearchTerm("explain", 10, null),
                         new SearchTerm("expect", 8, null),
                         new SearchTerm("expire", 5, null),
+<<<<<<< HEAD
                         new SearchTerm("expert", 4, null)
+=======
+                        new SearchTerm("expert", 4,null)
+>>>>>>> 4c521604c55d6420f2a65057ca1bbdbca2ed1858
                 )
         );
 

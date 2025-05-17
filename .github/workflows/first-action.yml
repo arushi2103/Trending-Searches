@@ -1,0 +1,21 @@
+# name of the workflow
+name: First wokflow 
+# the event that will trigger the workflow i.e. when this workflow will be executed (can choose multiple events )
+on: workflow_dispatch
+
+jobs:
+# the job name is not reseved , you can have multiple jobs inside the jobs
+  first-job:
+  # runs-on is reserved keyword - that defines , this particular job will run on defined-environment(will intall the env on the hosting machine)
+    runs-on: ubuntu-latest
+    steps:
+      - name: print greeting
+        run: |
+          echo "hello world"
+          echo "I have created my first workflow today!!!!"
+      - name: print goodbye
+        run: echo "Done- bye!"
+      
+      
+
+
