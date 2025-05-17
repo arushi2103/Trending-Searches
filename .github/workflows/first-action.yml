@@ -13,7 +13,7 @@ jobs:
         run: |
           echo "hello world"
           echo "I have created my first workflow today!!!!"
-      - name: print goodby
+      - name: print goodbye
         run: echo "Done- bye!"
       
       
